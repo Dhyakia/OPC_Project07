@@ -43,23 +43,20 @@ def csvRowIntoList(csv_doc_path):
         # [3] is the profit after 2 year
         # [4] is the new total of profit
         for data in file_into_list:
-            cost_to_buy = int(data[1])
-            profit_percentage = int(data[2].removesuffix("%"))
+            cost_to_buy = float(data[1])
+            profit_percentage = float(data[2].removesuffix("%"))
             benefit = (cost_to_buy*profit_percentage)/100
             profit = cost_to_buy + benefit
-            data.append(benefit)
-            data.append(profit)
+            data.append(int(benefit))
+            data.append(int(profit))
         return file_into_list
 
 
 def comboGenerator(list_of_actions):
     print("Generating combination ...")
     max_profit = 0
-    # Commented OUT for testing purposes
-    # TODO: DONT FORGET TO COMMENT IT IN
-    # Above range of 7, it gets way too long.
-    # for i in range(0, len(list_of_actions)+1):
-    for i in range(0, 7):
+
+    for i in range(0, len(list_of_actions)+1):
         for subset in itertools.permutations(list_of_actions, i):
             actions_names = []
             actions_cost = 0
@@ -67,24 +64,20 @@ def comboGenerator(list_of_actions):
             actions_profit = 0
 
             for list in subset:
-                x = int(list[1])
-                actions_cost += x
+                x = float(list[1])
+                actions_cost += int(x)
 
             if actions_cost < 500:
                 for list in subset:
                     x = int(list[4])
                     actions_profit += x
             else:
-                print("Combination too expensive.")
+                continue
 
             profit_check = newBest(max_profit, actions_profit)
 
             if type(profit_check) is int:
                 max_profit = profit_check
-                # récupérer les noms [0]
-                # les [1], je l'ais déjà dans action_cost
-                # récupérer les [3] comme pourcentage de benefice
-                # les [4], je l'ais déjà dans action_benefit
                 for list in subset:
                     name = list[0]
                     actions_names.append(name)
