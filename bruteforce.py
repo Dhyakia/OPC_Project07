@@ -53,8 +53,8 @@ def csvRowIntoList(csv_doc_path):
 
 
 # Function that tries every single permutation:
-# Worst possible way aka "factorial"
-# BigO of a factorial: O(n!)
+# "Factorial" aka the worst way possible
+# BigO notation of a factorial is: O(n!)
 def comboGenerator(list_of_actions):
     print("Generating combination ...")
     max_profit = 0
@@ -72,18 +72,18 @@ def comboGenerator(list_of_actions):
 
             if actions_cost < 500:
                 for list in subset:
-                    x = float(list[4])
-                    actions_profit += x
+                    name = list[0]
+                    benefit = float(list[3])
+                    profit = float(list[4])
+
+                    actions_names.append(name)
+                    actions_benefit += benefit
+                    actions_profit += profit
             else:
                 continue
 
             if max_profit < actions_profit:
                 max_profit = actions_profit
-                for list in subset:
-                    name = list[0]
-                    actions_names.append(name)
-                    action_benefit = float(list[3])
-                    actions_benefit += action_benefit
                 output_new_best(
                     actions_names,
                     actions_cost,
