@@ -52,10 +52,12 @@ def csvRowIntoList(csv_doc_path):
         return file_into_list
 
 
+# Function that tries every single permutation:
+# Worst possible way aka "factorial"
+# BigO of a factorial: O(n!)
 def comboGenerator(list_of_actions):
     print("Generating combination ...")
     max_profit = 0
-    profit_check = 0
 
     for i in range(1, len(list_of_actions)+1):
         for subset in itertools.permutations(list_of_actions, i):
@@ -75,10 +77,8 @@ def comboGenerator(list_of_actions):
             else:
                 continue
 
-            profit_check = newBest(max_profit, actions_profit)
-
-            if max_profit < profit_check:
-                max_profit = profit_check
+            if max_profit < actions_profit:
+                max_profit = actions_profit
                 for list in subset:
                     name = list[0]
                     actions_names.append(name)
