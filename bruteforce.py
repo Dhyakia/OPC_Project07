@@ -1,9 +1,6 @@
-from ast import IsNot
-from cmath import isnan
 import itertools
 import os
 import csv
-from types import NoneType
 
 
 def getData():
