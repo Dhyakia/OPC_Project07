@@ -1,3 +1,4 @@
+import itertools
 import os
 import csv
 
@@ -33,35 +34,95 @@ def csvRowIntoList(csv_doc_path):
         print('Collecting data ...')
         file_read = csv.reader(file)
         file_into_list = list(file_read)
+
+        # remove the header's element
         del file_into_list[0]
 
         # Not only does it take each row into it's own list
-        # It also add 2 element in each: 
+        # It also add 2 element in each:
         # [3] is the profit after 2 year
         # [4] is the new total of profit
         for data in file_into_list:
             cost_to_buy = int(data[1])
             profit_percentage = int(data[2].removesuffix("%"))
-            profit = (cost_to_buy*profit_percentage)/100
-            new_total = cost_to_buy + profit
+            benefit = (cost_to_buy*profit_percentage)/100
+            profit = cost_to_buy + benefit
+            data.append(benefit)
             data.append(profit)
-            data.append(new_total)
-            print(data)
         return file_into_list
 
-# 2. Essayer toutes les combinaisons
-# A chauqe génération de combinaisons ...
-# Si le total des prix > que 500, alors ça dégage.
-# Si le total des prix < que 500, ajouter les bénéfices.
-# Comparer les bénéfices du nouveau avec l'ancien meilleur,
-# puis garder le meilleurs.
-# Petit message comme quoi y'as un nouveau meilleur avec la somme.
+
+def comboGenerator(list_of_actions):
+    print("Generating combination ...")
+    max_profit = 0
+    # Commented OUT for testing purposes
+    # TODO: DONT FORGET TO COMMENT IT IN
+    # Above range of 7, it gets way too long.
+    # for i in range(0, len(list_of_actions)+1):
+    for i in range(0, 7):
+        for subset in itertools.permutations(list_of_actions, i):
+            actions_names = []
+            actions_cost = 0
+            actions_benefit = 0
+            actions_profit = 0
+
+            for list in subset:
+                x = int(list[1])
+                actions_cost += x
+
+            if actions_cost < 500:
+                for list in subset:
+                    x = int(list[4])
+                    actions_profit += x
+            else:
+                print("Combination too expensive.")
+
+            profit_check = newBest(max_profit, actions_profit)
+
+            if type(profit_check) is int:
+                max_profit = profit_check
+                # récupérer les noms [0]
+                # les [1], je l'ais déjà dans action_cost
+                # récupérer les [3] comme pourcentage de benefice
+                # les [4], je l'ais déjà dans action_benefit
+                for list in subset:
+                    name = list[0]
+                    actions_names.append(name)
+                    action_benefit = int(list[3])
+                    actions_benefit += action_benefit
+                output_new_best(
+                    actions_names,
+                    actions_cost,
+                    actions_benefit,
+                    actions_profit)
+            else:
+                continue
+
+
+def newBest(max_profit, action_benefit):
+
+    if action_benefit > max_profit:
+        max_profit = action_benefit
+        return max_profit
+    else:
+        pass
+
+
+def output_new_best(names, cost, benefit, profit):
+    print("")
+    print("New best!!")
+    print("Best combo is: " + str(names)[1:-1])
+    print("For a buying cost of: " + str(cost) + "€")
+    print("You get a benefit of: " + str(benefit) + "€")
+    print("For a new total of: " + str(profit) + "€")
+    print("")
 
 
 def brut():
     csv_path = getData()
     data_list = csvRowIntoList(csv_path)
-    # Prochaine fonction, essaye toutes les combinaisons
+    comboGenerator(data_list)
+    print("Done")
 
 
 if __name__ == "__main__":
