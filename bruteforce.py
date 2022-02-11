@@ -1,6 +1,9 @@
+from ast import IsNot
+from cmath import isnan
 import itertools
 import os
 import csv
+from types import NoneType
 
 
 def getData():
@@ -47,16 +50,17 @@ def csvRowIntoList(csv_doc_path):
             profit_percentage = float(data[2].removesuffix("%"))
             benefit = (cost_to_buy*profit_percentage)/100
             profit = cost_to_buy + benefit
-            data.append(int(benefit))
-            data.append(int(profit))
+            data.append(benefit)
+            data.append(profit)
         return file_into_list
 
 
 def comboGenerator(list_of_actions):
     print("Generating combination ...")
     max_profit = 0
+    profit_check = 0
 
-    for i in range(0, len(list_of_actions)+1):
+    for i in range(1, len(list_of_actions)+1):
         for subset in itertools.permutations(list_of_actions, i):
             actions_names = []
             actions_cost = 0
@@ -65,23 +69,23 @@ def comboGenerator(list_of_actions):
 
             for list in subset:
                 x = float(list[1])
-                actions_cost += int(x)
+                actions_cost += x
 
             if actions_cost < 500:
                 for list in subset:
-                    x = int(list[4])
+                    x = float(list[4])
                     actions_profit += x
             else:
                 continue
 
             profit_check = newBest(max_profit, actions_profit)
 
-            if type(profit_check) is int:
+            if max_profit < profit_check:
                 max_profit = profit_check
                 for list in subset:
                     name = list[0]
                     actions_names.append(name)
-                    action_benefit = int(list[3])
+                    action_benefit = float(list[3])
                     actions_benefit += action_benefit
                 output_new_best(
                     actions_names,
@@ -98,7 +102,8 @@ def newBest(max_profit, action_benefit):
         max_profit = action_benefit
         return max_profit
     else:
-        pass
+        max_profit = 0
+        return max_profit
 
 
 def output_new_best(names, cost, benefit, profit):
