@@ -1,6 +1,6 @@
-import itertools
 import os
 import csv
+import itertools
 
 
 def getData():
@@ -104,12 +104,16 @@ def newBest(max_profit, action_benefit):
 
 
 def output_new_best(names, cost, benefit, profit):
+    formated_cost = "{:.2f}".format(cost)
+    formated_benefit = "{:.2f}".format(benefit)
+    formated_profit = "{:.2f}".format(profit)
+
     print("")
     print("New best!!")
     print("Best combo is: " + str(names)[1:-1])
-    print("For a buying cost of: " + str(cost) + "€")
-    print("You get a benefit of: " + str(benefit) + "€")
-    print("For a new total of: " + str(profit) + "€")
+    print("For a buying cost of: " + str(formated_cost) + "€")
+    print("You get a benefit of: " + str(formated_benefit) + "€")
+    print("For a new total of: " + str(formated_profit) + "€")
     print("")
 
 
