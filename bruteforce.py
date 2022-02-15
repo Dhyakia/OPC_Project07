@@ -2,6 +2,8 @@ import os
 import csv
 import itertools
 
+MAX_COST = 500
+
 
 def getData():
     while True:
@@ -70,7 +72,7 @@ def comboGenerator(list_of_actions):
                 x = float(list[1])
                 actions_cost += x
 
-            if actions_cost < 500:
+            if actions_cost < MAX_COST:
                 for list in subset:
                     name = list[0]
                     benefit = float(list[3])
@@ -84,6 +86,9 @@ def comboGenerator(list_of_actions):
 
             if max_profit < actions_profit:
                 max_profit = actions_profit
+                # Choose to incorporate the output every loop
+                # Just so you can see the program looping
+                # ... and realise it will never end.
                 output_new_best(
                     actions_names,
                     actions_cost,
