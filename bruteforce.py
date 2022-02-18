@@ -54,15 +54,19 @@ def csvRowIntoList(csv_doc_path):
         return file_into_list
 
 
-# Function that tries every single permutation:
-# "Factorial" aka the worst way possible
-# BigO notation of a factorial is: O(n!)
+# Function that tries every single combinations:
+
+# Time complexity: O(2^n)
+# A justifier - par 100% sûr de la notation
+
+# Space complexity: O(1);
+#
 def comboGenerator(list_of_actions):
     print("Generating combination ...")
     max_profit = 0
 
     for i in range(1, len(list_of_actions)+1):
-        for subset in itertools.permutations(list_of_actions, i):
+        for subset in itertools.combinations(list_of_actions, i):
             actions_names = []
             actions_cost = 0
             actions_benefit = 0
@@ -86,9 +90,6 @@ def comboGenerator(list_of_actions):
 
             if max_profit < actions_profit:
                 max_profit = actions_profit
-                # Choose to incorporate the output every loop
-                # Just so you can see the program looping
-                # ... and realise it will never end.
                 output_new_best(
                     actions_names,
                     actions_cost,
