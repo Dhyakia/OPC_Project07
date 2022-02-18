@@ -1,6 +1,6 @@
+from operator import itemgetter
 import os
 import csv
-import itertools
 
 
 MAX_COST = 500
@@ -32,15 +32,16 @@ def getData():
             print("This isn't a .csv file.")
 
 
-def csvRowIntoList(csv_doc_path):
+def csv_To_List(csv_doc_path):
     with open(csv_doc_path, 'r') as file:
         print('Collecting data ...')
         file_read = csv.reader(file)
         file_into_list = list(file_read)
         list_index = []
-        print("Number of value taken before sort:" + str(len(file_into_list)))
-        # remove the header's element
+
+        # remove the header element (name,cost,profit)
         del file_into_list[0]
+        print("Number of value taken: " + str(len(file_into_list)))
 
         # Add 2 parameter in each element:
         # [3] is the profit after 2 year
@@ -54,99 +55,83 @@ def csvRowIntoList(csv_doc_path):
                 profit = cost_to_buy + benefit
                 formated_benefit = "{:.2f}".format(benefit)
                 formated_profit = "{:.2f}".format(profit)
+                data[2] = profit_percentage
                 data.append(formated_benefit)
                 data.append(formated_profit)
             else:
                 list_index.append(file_index)
 
-        list_index.sort(reverse=True)
-        for index in list_index:
-            del file_into_list[index]
+        sorted_data = remove_zero_and_negatives(file_into_list, list_index)
 
-        print("Number of value taken after sort:" + str(len(file_into_list)))
-        return file_into_list
+        print("Number of value after culling: " + str(len(file_into_list)))
+        return sorted_data
 
 
-def max_range_combos(list):
-    print("Calculating maximum range ...")
-    cost_list = []
-    range_counter = 0
+# Optimisation: removal of the zeros and negatives numbers based on index
+def remove_zero_and_negatives(list_of_data, list_of_index):
+    list_of_index.sort(reverse=True)
+    for index in list_of_index:
+        del list_of_data[index]
 
-    for i in list:
-        cost_list.append(float(i[1]))
+    return list_of_data
 
-    sorted_list = sorted(cost_list)
-    print(sorted_list)
-    count_counter = 0
-    for i in sorted_list:
-        count_counter = (count_counter + i)
-        range_counter += 1
-        if count_counter > MAX_COST:
-            return range_counter
+
+# Knapsack problem;
+# Choice of resolution: Greedy algorithm
+# Time complexity: O(?)
+#
+
+# Space complexity: O(?);
+#
+def gluton(list):
+    print("Glutony in progress ...")
+    list_sorted_per_percentage = sorted(list, key=itemgetter(2), reverse=True)
+    big_bucks = 0
+    best_actions = []
+
+    for action in list_sorted_per_percentage:
+        big_bucks += float(action[1])
+
+        if big_bucks <= 500:
+            best_actions.append(action)
         else:
-            continue
+            big_bucks -= float(action[1])
+
+    return best_actions
 
 
-def comboGenerator(list_of_actions, max_range):
-    print("Generating combination ...")
-    max_profit = 0
+def display_results(list_of_best_actions):
+    actions_names = []
+    actions_costs = 0
+    actions_benefits = 0
+    actions_profits = 0
 
-    for i in range(1, max_range):
-        for subset in itertools.combinations(list_of_actions, i):
-            actions_names = []
-            actions_cost = 0
-            actions_benefit = 0
-            actions_profit = 0
+    # First we get data from each element inside the list
+    for action in list_of_best_actions:
+        actions_names.append(action[0])
+        actions_costs += float(action[1])
+        actions_benefits += float(action[3])
+        actions_profits += float(action[4])
 
-            for list in subset:
-                x = float(list[1])
-                actions_cost += x
+    # Then we format them into a clean format
+    formated_names = str(actions_names)[1:-1]
+    formated_costs = str("{:.2f}".format(actions_costs))
+    formated_benefits = str("{:.2f}".format(actions_benefits))
+    formated_profits = str("{:.2f}".format(actions_profits))
 
-            if actions_cost < MAX_COST:
-                for list in subset:
-                    name = list[0]
-                    benefit = float(list[3])
-                    profit = float(list[4])
-
-                    actions_names.append(name)
-                    actions_benefit += benefit
-                    actions_profit += profit
-            else:
-                continue
-
-            if max_profit < actions_profit:
-                max_profit = actions_profit
-            else:
-                continue
-
-# Idées optimisation:
-# TODO: 1. Utiliser de la récursion
-# Desc: Multiplier les fonctions pour gagner en temps contre de la mémoire
-# Solu: ???
-
-# DONE
-# TODO: 2. Enlever les combos trop haut;
-# Desc: Le script n'as aucunement besoin d'essayer toutes les combos.
-# Solu: Trier la liste par élément "cout", avec ".sort()".
-# Additioner les éléments de [0] à son prochain.
-# Une fois que la valeur > que 500, alors ...
-# (valeur-1) = la range du loop
-
-# DONE
-# TODO: 3. Ne pas faire de répétition;
-# Desc: Ne pas dupliquer ex: [1,2] & [2,1]
-# Solu: Utiliser ".combinations()" plutôt que ".permuations()"
-
-# DONE
-# TODO: 4. Enlever les données négatives et les zéros
+    # Finaly, we display them:
+    print("")
+    print("The best combo of actions is: " + formated_names)
+    print("For a total cost of: " + formated_costs)
+    print("It yield a profit of: " + formated_benefits)
+    print("For a new total of: " + formated_profits)
 
 
 def opti():
     csv_path = getData()
-    data_list = csvRowIntoList(csv_path)
-    max_range = max_range_combos(data_list)
-    comboGenerator(data_list, max_range)
-    print("Done")
+    data_list = csv_To_List(csv_path)
+    list_best_actions = gluton(data_list)
+    display_results(list_best_actions)
 
 
 if __name__ == "__main__":
