@@ -1,10 +1,12 @@
+import itertools
 import os
 import csv
-import itertools
+
 
 MAX_COST = 500
 
 
+# Get the path to the right .csv document from an input
 def getData():
     while True:
         doc_path = input("Input the .csv file path here: ")
@@ -31,6 +33,8 @@ def getData():
             print("This isn't a .csv file.")
 
 
+# Takes the .csv path as target
+# return of list of containing lists for each row
 def csvRowIntoList(csv_doc_path):
     with open(csv_doc_path, 'r') as file:
         print('Collecting data ...')
@@ -54,18 +58,32 @@ def csvRowIntoList(csv_doc_path):
         return file_into_list
 
 
-# Function that tries every single combinations:
+# Take the cost and benefit element in each element in the list
+# return a list of all cost, a list of all benefit and the lenght of the list.
+def prepareData(data_list):
+    ListofCosts = []
+    ListofBenefits = []
+    NumberofActions = len(data_list)
 
-# Time complexity: O(2^n)
-# A justifier - par 100% sûr de la notation
+    for data in data_list:
+        ListofCosts.append(float(data[1]))
+        ListofBenefits.append(float(data[3]))
 
-# Space complexity: O(1);
+    return ListofCosts, ListofBenefits, NumberofActions
+
+# Time complexity: O(?)
 #
-def comboGenerator(list_of_actions):
+
+# Space complexity: O(?);
+#
+
+
+# The brute force algorithm
+def bruteForce(list_of_actions):
     print("Generating combination ...")
     max_profit = 0
 
-    for i in range(1, len(list_of_actions)+1):
+    for i in range(0, len(list_of_actions)+1):
         for subset in itertools.combinations(list_of_actions, i):
             actions_names = []
             actions_cost = 0
@@ -88,6 +106,9 @@ def comboGenerator(list_of_actions):
             else:
                 continue
 
+            # Choose to incorporate the output every loop
+            # Just so you can see the program looping
+            # ... and realise it will never when using large pool of data.
             if max_profit < actions_profit:
                 max_profit = actions_profit
                 output_new_best(
@@ -100,7 +121,6 @@ def comboGenerator(list_of_actions):
 
 
 def newBest(max_profit, action_benefit):
-
     if action_benefit > max_profit:
         max_profit = action_benefit
         return max_profit
@@ -113,7 +133,6 @@ def output_new_best(names, cost, benefit, profit):
     formated_cost = "{:.2f}".format(cost)
     formated_benefit = "{:.2f}".format(benefit)
     formated_profit = "{:.2f}".format(profit)
-
     print("")
     print("New best!!")
     print("Best combo is: " + str(names)[1:-1])
@@ -126,8 +145,8 @@ def output_new_best(names, cost, benefit, profit):
 def brut():
     csv_path = getData()
     data_list = csvRowIntoList(csv_path)
-    comboGenerator(data_list)
-    print("Done")
+    bruteForce(data_list)
+    print("Done!")
 
 
 if __name__ == "__main__":
