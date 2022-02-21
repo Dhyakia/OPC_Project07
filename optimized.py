@@ -122,9 +122,9 @@ def display_results(list_of_best_actions):
     # Finaly, we display them:
     print("")
     print("The best combo of actions is: " + formated_names)
-    print("For a total cost of: " + formated_costs)
-    print("It yield a profit of: " + formated_benefits)
-    print("For a new total of: " + formated_profits)
+    print("For a total cost of: " + formated_costs + "€")
+    print("It yield a profit of: " + formated_benefits + "€")
+    print("For a new total of: " + formated_profits + "€")
 
 
 def opti():
