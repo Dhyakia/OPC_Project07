@@ -91,8 +91,7 @@ def bruteForce(list_of_actions):
             actions_profit = 0
 
             for list in subset:
-                x = float(list[1])
-                actions_cost += x
+                actions_cost += float(list[1])
 
             if actions_cost < MAX_COST:
                 for list in subset:
