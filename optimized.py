@@ -76,14 +76,22 @@ def remove_zero_and_negatives(list_of_data, list_of_index):
     return list_of_data
 
 
-# Knapsack problem;
+# Knapsack 0/1 problem;
 # Choice of resolution: Greedy algorithm
-# Time complexity: O(?)
-#
+# The greedy algorithm is a problem solving method that make local optimal choice.
+# Meaning that every stage, it will pick the best next choice.
 
-# Space complexity: O(?);
-#
-def gluton(list):
+# pros: Very fast, simple to understand and implement.
+# cons: Result is said "heuristic", meaning we trade time for accuracy.
+
+# Time complexity: O(n)
+# Elle boucle une seul fois, à travers tout les élements de la liste.
+# Appelée aussi "Linear time"
+
+# Space complexity: O(1);
+# Pas de récursivité, ou de multiplication dans l'espace.
+# Le montant de "place" que prend la fonction est fixe: une liste.
+def greed(list):
     print("Glutony in progress ...")
     list_sorted_per_percentage = sorted(list, key=itemgetter(2), reverse=True)
     big_bucks = 0
@@ -130,7 +138,7 @@ def display_results(list_of_best_actions):
 def opti():
     csv_path = getData()
     data_list = csv_To_List(csv_path)
-    list_best_actions = gluton(data_list)
+    list_best_actions = greed(data_list)
     display_results(list_best_actions)
 
 

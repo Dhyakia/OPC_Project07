@@ -71,11 +71,12 @@ def prepareData(data_list):
 
     return ListofCosts, ListofBenefits, NumberofActions
 
-# Time complexity: O(?)
-#
+# Time complexity: O(n*n!)
+# for loop set it as O(n), then the .combinations...
+# 
 
-# Space complexity: O(?);
-#
+# Space complexity: O(1);
+# Pas de récusivité, ou quelconque techniques pour optimiser l'espace.
 
 
 # The brute force algorithm
@@ -105,9 +106,9 @@ def bruteForce(list_of_actions):
             else:
                 continue
 
-            # Choose to incorporate the output every loop
-            # Just so you can see the program looping
-            # ... and realise it will never when using large pool of data.
+            # Choose to incorporate the output every loop,
+            # to get a better visualisation of the progress,
+            # ... and realise it will never when using large pool of input
             if max_profit < actions_profit:
                 max_profit = actions_profit
                 output_new_best(
@@ -117,15 +118,6 @@ def bruteForce(list_of_actions):
                     actions_profit)
             else:
                 continue
-
-
-def newBest(max_profit, action_benefit):
-    if action_benefit > max_profit:
-        max_profit = action_benefit
-        return max_profit
-    else:
-        max_profit = 0
-        return max_profit
 
 
 def output_new_best(names, cost, benefit, profit):
