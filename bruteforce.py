@@ -1,4 +1,3 @@
-import itertools
 import os
 import csv
 
@@ -35,7 +34,7 @@ def getData():
 
 # Takes the .csv path as target
 # return of list of containing lists for each row
-def csvRowIntoList(csv_doc_path):
+def csv_To_List(csv_doc_path):
     with open(csv_doc_path, 'r') as file:
         print('Collecting data ...')
         file_read = csv.reader(file)
@@ -50,94 +49,78 @@ def csvRowIntoList(csv_doc_path):
         # [4] is the new total of profit
         for data in file_into_list:
             cost_to_buy = float(data[1])
+            data[1] = cost_to_buy
             profit_percentage = float(data[2].removesuffix("%"))
             benefit = (cost_to_buy*profit_percentage)/100
             profit = cost_to_buy + benefit
+
             data.append(benefit)
             data.append(profit)
         return file_into_list
 
 
-# Take the cost and benefit element in each element in the list
-# return a list of all cost, a list of all benefit and the lenght of the list.
-def prepareData(data_list):
-    ListofCosts = []
-    ListofBenefits = []
-    NumberofActions = len(data_list)
+def feeder(listofactions):
+    print("Chopping data ...")
+    listofCosts = []
+    listofProfits = []
 
-    for data in data_list:
-        ListofCosts.append(float(data[1]))
-        ListofBenefits.append(float(data[3]))
+    for item in listofactions:
+        listofCosts.append(item[1])
+        listofProfits.append(item[4])
 
-    return ListofCosts, ListofBenefits, NumberofActions
+    listsize = len(listofactions)
+    print("Chopping done, feeding data to algorithm ...")
+    return listofCosts, listofProfits, listsize
 
-# Time complexity: O(n*n!)
-# for loop set it as O(n), then the .combinations...
-# 
+# Choice of resolution: Brute force
+# Try everysingle solution together, without optimising
 
-# Space complexity: O(1);
-# Pas de récusivité, ou quelconque techniques pour optimiser l'espace.
+# pros: Guarantee to find the correct solution, withing a ""reasonable"" timef
+# cons: redundancy of combos, slow, gets slower exponantialy
+
+# Time complexity: O(2^n)
+# Exponential time
+
+# Space complexity: O(2^n);
+# Exponential space
 
 
 # The brute force algorithm
-def bruteForce(list_of_actions):
-    print("Generating combination ...")
-    max_profit = 0
+def bruteForce(max_cost, cost, profit, numberofItem):
+    # Base case
+    if numberofItem == 0 or max_cost == 0:
+        return 0
 
-    for i in range(0, len(list_of_actions)+1):
-        for subset in itertools.combinations(list_of_actions, i):
-            actions_names = []
-            actions_cost = 0
-            actions_benefit = 0
-            actions_profit = 0
-
-            for list in subset:
-                actions_cost += float(list[1])
-
-            if actions_cost < MAX_COST:
-                for list in subset:
-                    name = list[0]
-                    benefit = float(list[3])
-                    profit = float(list[4])
-
-                    actions_names.append(name)
-                    actions_benefit += benefit
-                    actions_profit += profit
-            else:
-                continue
-
-            # Choose to incorporate the output every loop,
-            # to get a better visualisation of the progress,
-            # ... and realise it will never when using large pool of input
-            if max_profit < actions_profit:
-                max_profit = actions_profit
-                output_new_best(
-                    actions_names,
-                    actions_cost,
-                    actions_benefit,
-                    actions_profit)
-            else:
-                continue
+    # If weight of the nth item is more than the maximum capacity,
+    # then the item cannot be included in the optimal solution.
+    if (cost[numberofItem-1] > max_cost):
+        return bruteForce(max_cost, cost, profit, numberofItem-1)
+    # return the maximum of two cases:
+    # (1) nth item included
+    # (2) not included
+    else:
+        return max(profit[numberofItem-1] + bruteForce(
+            max_cost-cost[numberofItem-1], cost, profit, numberofItem-1),
+                   bruteForce(max_cost, cost, profit, numberofItem-1))
 
 
-def output_new_best(names, cost, benefit, profit):
-    formated_cost = "{:.2f}".format(cost)
-    formated_benefit = "{:.2f}".format(benefit)
-    formated_profit = "{:.2f}".format(profit)
+# Ouput data in a formated manner for readability
+def output_results(bestComboBenefit, bestComboNames):
     print("")
-    print("New best!!")
-    print("Best combo is: " + str(names)[1:-1])
-    print("For a buying cost of: " + str(formated_cost) + "€")
-    print("You get a benefit of: " + str(formated_benefit) + "€")
-    print("For a new total of: " + str(formated_profit) + "€")
-    print("")
+    print("Solution found!")
+    print("The best combos of actions is:" + str(bestComboNames)[1:-1])
+    print("For a profit of: " + str("{:.2f}".format(bestComboBenefit) + "€"))
 
 
 def brut():
     csv_path = getData()
-    data_list = csvRowIntoList(csv_path)
-    bruteForce(data_list)
-    print("Done!")
+    data_list = csv_To_List(csv_path)
+    listofCosts, listsofProfits, listsize = feeder(data_list)
+    bruteforceBenefits = bruteForce(
+        MAX_COST, listofCosts, listsofProfits, listsize)
+    # TODO: temporary list until i found out how to get the names.
+    bestCombosNames = ["Name-1", "Name-2", "Name-3"]
+    output_results(bruteforceBenefits, bestCombosNames)
 
 
 if __name__ == "__main__":
