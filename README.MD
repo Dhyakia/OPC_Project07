@@ -1,11 +1,11 @@
 # OPC_Project 07
 
-The goal of this project is to make us of algorithm to fasten the execution of a program.
+The goal of this project is to make use of algorithm to fasten the execution of a program.
 
 
 # Introduction
 
-This program will take a .csv full of actions, with headers named: "name,cost,profit" and will return the best combination of actions for a capacity set in
+This program will take a .csv full of action, with headers named: "name,cost,profit" and will return the best combination of actions for a capacity set in:
 ```
 MAX_COST = 500
 ```
@@ -44,14 +44,14 @@ git clone https://github.com/Dhyakia/OPC_Project04.git
 2. Click on "Code" (green button) and then "Download Zip"
 3. Un-zip the file and you're done !
 
-### 2. Setting up a virtual environement
-1. With the console command, navigate to the folder of instalation.
-2. To create the virtual environement, enter this command :
+### 2. Setting up a virtual environment
+1. With the console command, navigate to the folder of installation.
+2. To create the virtual environment, enter this command :
 
    Windows : ```python3 -m venv c:\path\to\venv```
 
    MacOs/Linux : ```python3 -m venv venv```
-3. Now that the virtual environoment is created, you need to activate it :
+3. Now that the virtual environment is created, you need to activate it :
 
    Windows : ```cd venv/Scripts``` puis ```activate```
    
