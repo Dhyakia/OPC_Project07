@@ -61,14 +61,14 @@ def csv_To_List(csv_doc_path):
             else:
                 list_index.append(file_index)
 
-        sorted_data = remove_zero_and_negatives(file_into_list, list_index)
+        sorted_data = listCulling(file_into_list, list_index)
 
         print("Number of value after culling: " + str(len(file_into_list)))
         return sorted_data
 
 
 # Optimisation: removal of the zeros and negatives numbers based on index
-def remove_zero_and_negatives(list_of_data, list_of_index):
+def listCulling(list_of_data, list_of_index):
     list_of_index.sort(reverse=True)
     for index in list_of_index:
         del list_of_data[index]
@@ -77,8 +77,9 @@ def remove_zero_and_negatives(list_of_data, list_of_index):
 
 
 # Knapsack 0/1 problem;
-# Choice of resolution: Greedy algorithm
-# The greedy algorithm is a problem solving method that make local optimal choice.
+# Choice of resolution: Greedy algorithm / Glouton
+# The greedy algorithm is a problem solving method
+# that make local optimal choice.
 # Meaning that every stage, it will pick the best next choice.
 
 # pros: Very fast, simple to understand and implement.
@@ -89,18 +90,18 @@ def remove_zero_and_negatives(list_of_data, list_of_index):
 # Appelée aussi "Linear time"
 
 # Space complexity: O(1);
-# Pas de récursivité, ou de multiplication dans l'espace.
-# Le montant de "place" que prend la fonction est fixe: une liste.
+# Montant de place fix = la list.
+# Pendant l'exécution, il ne grandit jamais.
 def greed(list):
     print("Glutony in progress ...")
-    list_sorted_per_percentage = sorted(list, key=itemgetter(2), reverse=True)
+    list_sorted = sorted(list, key=itemgetter(2), reverse=True)
     big_bucks = 0
     best_actions = []
 
-    for action in list_sorted_per_percentage:
+    for action in list_sorted:
         big_bucks += float(action[1])
 
-        if big_bucks <= 500:
+        if big_bucks <= MAX_COST:
             best_actions.append(action)
         else:
             big_bucks -= float(action[1])
