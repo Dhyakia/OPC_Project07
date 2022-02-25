@@ -56,6 +56,7 @@ def csv_To_List(csv_doc_path):
                 formated_benefit = "{:.2f}".format(benefit)
                 formated_profit = "{:.2f}".format(profit)
                 data[2] = profit_percentage
+
                 data.append(formated_benefit)
                 data.append(formated_profit)
             else:
@@ -76,22 +77,7 @@ def listCulling(list_of_data, list_of_index):
     return list_of_data
 
 
-# Knapsack 0/1 problem;
-# Choice of resolution: Greedy algorithm / Glouton
-# The greedy algorithm is a problem solving method
-# that make local optimal choice.
-# Meaning that every stage, it will pick the best next choice.
-
-# pros: Very fast, simple to understand and implement.
-# cons: Result is said "heuristic", meaning we trade time for accuracy.
-
-# Time complexity: O(n)
-# Elle boucle une seul fois, à travers tout les élements de la liste.
-# Appelée aussi "Linear time"
-
-# Space complexity: O(1);
-# Montant de place fix = la list.
-# Pendant l'exécution, il ne grandit jamais.
+# The gluton algorithm
 def greed(list):
     print("Glutony in progress ...")
     list_sorted = sorted(list, key=itemgetter(2), reverse=True)

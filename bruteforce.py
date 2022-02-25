@@ -43,8 +43,7 @@ def csv_To_List(csv_doc_path):
         # remove the header's element
         del file_into_list[0]
 
-        # Not only does it take each row into it's own list
-        # It also add 2 element in each:
+        # Add 2 parameter in each element:
         # [3] is the profit after 2 year
         # [4] is the new total of profit
         for data in file_into_list:
@@ -71,18 +70,6 @@ def feeder(listofactions):
     listsize = len(listofactions)
     print("Chopping done, feeding data to algorithm ...")
     return listofCosts, listofProfits, listsize
-
-# Choice of resolution: Brute force
-# Try everysingle solution together, without optimising
-
-# pros: Guarantee to find the correct solution, withing a ""reasonable"" timef
-# cons: redundancy of combos, slow, gets slower exponantialy
-
-# Time complexity: O(2^n)
-# Exponential time
-
-# Space complexity: O(2^n);
-# Exponential space
 
 
 # The brute force algorithm
