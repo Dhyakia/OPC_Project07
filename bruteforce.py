@@ -1,5 +1,6 @@
 import os
 import csv
+import itertools
 
 
 MAX_COST = 500
@@ -33,7 +34,7 @@ def getData():
 
 
 # Takes the .csv path as target
-# return of list of containing lists for each row
+# Return of list of containing lists for each row
 def csv_To_List(csv_doc_path):
     with open(csv_doc_path, 'r') as file:
         print('Collecting data ...')
@@ -55,59 +56,74 @@ def csv_To_List(csv_doc_path):
 
             data.append(benefit)
             data.append(profit)
-        return file_into_list
+        return file_into_list, len(file_into_list)
 
 
-def feeder(listofactions):
-    print("Chopping data ...")
-    listofCosts = []
-    listofProfits = []
-
-    for item in listofactions:
-        listofCosts.append(item[1])
-        listofProfits.append(item[4])
-
-    listsize = len(listofactions)
-    print("Chopping done, feeding data to algorithm ...")
-    return listofCosts, listofProfits, listsize
+# List that will store all the combinasions possible
+combos = []
 
 
-# The brute force algorithm
-def bruteForce(max_cost, cost, profit, numberofItem):
-    # Base case
-    if numberofItem == 0 or max_cost == 0:
-        return 0
-
-    # If weight of the nth item is more than the maximum capacity,
-    # then the item cannot be included in the optimal solution.
-    if (cost[numberofItem-1] > max_cost):
-        return bruteForce(max_cost, cost, profit, numberofItem-1)
-    # return the maximum of two cases:
-    # (1) nth item included
-    # (2) not included
-    else:
-        return max(profit[numberofItem-1] + bruteForce(
-            max_cost-cost[numberofItem-1], cost, profit, numberofItem-1),
-                   bruteForce(max_cost, cost, profit, numberofItem-1))
+# Brute force method
+def combosGenerator(data_list, data_size):
+    for x in itertools.combinations(data_list, data_size):
+        combos.append(x)
+    if data_size > 0:
+        return combosGenerator(data_list, data_size-1)
+    return combos, len(combos)
 
 
-# Ouput data in a formated manner for readability
-def output_results(bestComboBenefit, bestComboNames):
+# Brute force method
+def bruteForce(listallCombos, numberofCombos):
+    best_combo_actions = []
+    best_combo_profit = 0
+
+    for combination in listallCombos:
+        total_cost = 0
+        bigBucks = 0
+
+        for action in combination:
+            total_cost += action[1]
+            bigBucks += action[4]
+
+        if total_cost <= MAX_COST and bigBucks > best_combo_profit:
+            best_combo_profit = bigBucks
+            best_combo_actions = combination
+
+    return best_combo_actions, best_combo_profit
+
+
+def output_best(best_actions, best_profit):
+    actions_names = []
+    actions_costs = 0
+    actions_benefits = 0
+    actions_profits = best_profit
+
+    # First we get data from each element inside the list
+    for action in best_actions:
+        actions_names.append(action[0])
+        actions_costs += float(action[1])
+        actions_benefits += float(action[3])
+
+    # Then we format them into a clean format
+    formated_names = str(actions_names)[1:-1]
+    formated_costs = str("{:.2f}".format(actions_costs))
+    formated_benefits = str("{:.2f}".format(actions_benefits))
+    formated_profits = str("{:.2f}".format(actions_profits))
+
+    # Finaly, we display them:
     print("")
-    print("Solution found!")
-    print("The best combos of actions is:" + str(bestComboNames)[1:-1])
-    print("For a profit of: " + str("{:.2f}".format(bestComboBenefit) + "€"))
+    print("The best combo of actions is: " + formated_names)
+    print("For a total cost of: " + formated_costs + "€")
+    print("It yield a profit of: " + formated_benefits + "€")
+    print("For a new total of: " + formated_profits + "€")
 
 
 def brut():
     csv_path = getData()
-    data_list = csv_To_List(csv_path)
-    listofCosts, listsofProfits, listsize = feeder(data_list)
-    bruteforceBenefits = bruteForce(
-        MAX_COST, listofCosts, listsofProfits, listsize)
-    # TODO: temporary list until i found out how to get the names.
-    bestCombosNames = ["Name-1", "Name-2", "Name-3"]
-    output_results(bruteforceBenefits, bestCombosNames)
+    data_list, data_size = csv_To_List(csv_path)
+    list_all_combos, combos_size = combosGenerator(data_list, data_size)
+    best_actions, best_combo_profit = bruteForce(list_all_combos, combos_size)
+    output_best(best_actions, best_combo_profit)
 
 
 if __name__ == "__main__":
