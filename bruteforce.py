@@ -63,7 +63,7 @@ def csv_To_List(csv_doc_path):
 combos = []
 
 
-# Brute force method
+# Generate all possible combos
 def combosGenerator(data_list, data_size):
     for x in itertools.combinations(data_list, data_size):
         combos.append(x)
@@ -74,6 +74,7 @@ def combosGenerator(data_list, data_size):
 
 # Brute force method
 def bruteForce(listallCombos, numberofCombos):
+    print("Brute force in progress ...")
     best_combo_actions = []
     best_combo_profit = 0
 
