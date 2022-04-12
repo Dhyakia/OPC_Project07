@@ -30,17 +30,17 @@ Using the git tool or straight from the source.
 ```
 mkdir mon_dossier
 cd mon_dossier
-git clone https://github.com/Dhyakia/OPC_Project04.git
+git clone https://github.com/Dhyakia/OPC_Project07.git
 ```
 
 #### Method Git desktop
 
-1. Go [here](https://github.com/Dhyakia/OPC_Project04)
+1. Go [here](https://github.com/Dhyakia/OPC_Project07)
 2. Click on "Code" (green button) and then "Open with GitHub Desktop"
 3. Clone the file to desired location and you're done !
 
 #### Method Manual
-1. Go [here](https://github.com/Dhyakia/OPC_Project04)
+1. Go [here](https://github.com/Dhyakia/OPC_Project07)
 2. Click on "Code" (green button) and then "Download Zip"
 3. Un-zip the file and you're done !
 
